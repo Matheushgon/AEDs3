@@ -1,8 +1,14 @@
 # AEDs3
 ## TP1 - Relacionamento 1:N
 - O que o trabalho faz?
-- Nome dos Participantes
+
+- Nome dos Participantes:
+- Henrique Saldanha Mendes Veloso
+- Matheus Henrique Gonçalves
+- Gabriel Reis Villela
+
 - Experiência com o trabalho
+
 - Checklist:
 
   As operações de inclusão, busca, alteração e exclusão de séries estão implementadas e funcionando corretamente?
