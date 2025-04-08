@@ -1,8 +1,9 @@
 package TP01.Entidades;
 
 import java.io.*;
+import TP01.index.Registro;
 
-public class Serie {
+public class Serie implements Registro {
 
     private int id;
     private String nome;
@@ -33,6 +34,38 @@ public class Serie {
     public int getId() {
         return id;
     }
+
+    public String getNome() {
+        return nome;
+    }
+    
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+    
+    public int getAnoLancamento() {
+        return anoLancamento;
+    }
+    
+    public void setAnoLancamento(int anoLancamento) {
+        this.anoLancamento = anoLancamento;
+    }
+    
+    public String getSinopse() {
+        return sinopse;
+    }
+    
+    public void setSinopse(String sinopse) {
+        this.sinopse = sinopse;
+    }
+    
+    public String getStreaming() {
+        return streaming;
+    }
+    
+    public void setStreaming(String streaming) {
+        this.streaming = streaming;
+    }    
 
     public String toString() {
         return "\nID.............: " + this.id +

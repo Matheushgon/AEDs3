@@ -1,24 +1,23 @@
 package TP01.CRUD;
 
-import java.io.IOException;
 import TP01.index.Arquivo;
-import TP01.Entidades.Serie;
+import TP01.Entidades.Episodio;
 
-public class ArquivoSerie extends Arquivo<Serie> {
+public class ArquivoEpisodio extends Arquivo<Episodio> {
 
-    public ArquivoSerie() throws Exception {
-        super("series", Serie.class.getConstructor());
+    public ArquivoEpisodio() throws Exception {
+        super("episodios", Episodio.class.getConstructor());
     }
 
     // CREATE
     @Override
-    public int create(Serie s) throws Exception {
-        return super.create(s);
+    public int create(Episodio e) throws Exception {
+        return super.create(e);
     }
 
     // READ por ID
     @Override
-    public Serie read(int id) throws Exception {
+    public Episodio read(int id) throws Exception {
         return super.read(id);
     }
 
@@ -30,7 +29,7 @@ public class ArquivoSerie extends Arquivo<Serie> {
 
     // UPDATE por ID
     @Override
-    public boolean update(Serie s) throws Exception {
-        return super.update(s);
+    public boolean update(Episodio e) throws Exception {
+        return super.update(e);
     }
 }
