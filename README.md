@@ -4,9 +4,9 @@
 O trabalho é um programa em que o usuario pode criar um arquivo com varias series e essas series contendo varios episodios, podendo fazer diversas ações com essas entidades usando arquivo indexado, hash extensivel e arvore b+
 
 - Nome dos Participantes:
- Henrique Saldanha Mendes Veloso
- Matheus Henrique Gonçalves
- Gabriel Reis Villela
+ -Henrique Saldanha Mendes Veloso
+ -Matheus Henrique Gonçalves
+ -Gabriel Reis Villela
 
 - Experiência com o trabalho:
   O trabalho foi muito desafiador por ser a primeira vez usando arquivos indexados mas ao mesmo tempo foi muito gratificante ver tudo funcionando no final de tudo.
