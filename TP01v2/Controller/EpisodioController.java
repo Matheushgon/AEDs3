@@ -12,6 +12,7 @@ import TP01v2.Model.SerieCRUD;
 public class EpisodioController {
     EpisodioCRUD arquivo;
     SerieCRUD arquivoSerie = new SerieCRUD();
+    SerieController serieController = new SerieController();
     private static Scanner console = new Scanner(System.in);
 
     public EpisodioController() throws Exception {
@@ -19,10 +20,23 @@ public class EpisodioController {
     }
 
     public Episodio buscarEpisodio() {
+        //Melhorar lógica com arvore B+2
         System.out.println("\nBusca de Episódio");
+        System.out.println("Nome da Série: ");
+        String nomeSerie = console.nextLine();
+        try {
+            Serie s = serieController.buscarSerie(nomeSerie);
+            if (s == null) {
+                System.out.println("Série não encontrada.");
+                return null;
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar série.");
+            e.printStackTrace();
+            return null;
+        }
         System.out.print("Nome do Episódio: ");
         String nome = console.nextLine();
-
         try {
             Episodio episodio = arquivo.read(nome);
             if (episodio != null) {
@@ -51,7 +65,7 @@ public class EpisodioController {
     public void incluirEpisodio() {
         System.out.println("\nInclusão de Episódio");
 
-        System.out.print("Nome da Serie: ");
+        System.out.print("Nome da Série: ");
         String nomeSerie = console.nextLine();
 
         try {
@@ -59,7 +73,8 @@ public class EpisodioController {
 
             if (serie != null) {
 
-                System.out.print("Nome: ");
+                System.out.print("Nome do Episódio: ");
+
                 String nome = console.nextLine();
 
                 System.out.print("Temporada: ");
@@ -160,31 +175,52 @@ public class EpisodioController {
     public void excluirEpisodio() {
         System.out.println("\nExclusão de Episódio");
 
-        System.out.print("Nome do Episódio a excluir: ");
-        String nome = console.nextLine();
-
+        System.out.print("Nome da Série: ");
+        String nomeSerie = console.nextLine();
+        Serie serie = null;
+        Episodio episodio = null;
         try {
-            Episodio episodio = arquivo.read(nome);
-            if (episodio != null) {
-                System.out.print("Confirma exclusão? (S/N): ");
-                char resp = console.nextLine().charAt(0);
+            serie = arquivoSerie.read(nomeSerie);
+            if (serie == null) {
+                System.out.println("Série não encontrada.");
+                return;
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar série.");
+            e.printStackTrace();
+            return;
+        }
 
-                if (resp == 'S' || resp == 's') {
-                    if (arquivo.delete(nome)) {
-                        System.out.println("Episódio excluído com sucesso.");
-                    } else {
-                        System.out.println("Erro ao excluir episódio.");
-                    }
-                } else {
-                    System.out.println("Exclusão cancelada.");
+        System.out.print("Nome do Episódio: ");
+        String nome = console.nextLine();
+        try {
+            episodio = arquivo.read(nome);
+            if (episodio == null) {
+                System.out.println("Episódio não encontrado.");
+                return;
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar episódio.");
+            e.printStackTrace();
+        }
+
+        if (serie != null && episodio != null) {
+            System.out.print("Confirma exclusão? (S/N): ");
+            char resp = console.nextLine().charAt(0);
+            if (resp == 'S' || resp == 's') {
+                try {
+                    arquivo.delete(episodio.getId());
+                    System.out.println("Episódio excluído com sucesso.");
+                } catch (Exception e) {
+                    System.out.println("Erro ao excluir episódio.");
+                    e.printStackTrace();
+                    return;
                 }
             } else {
-                System.out.println("Episódio não encontrado.");
+                System.out.println("Exclusão cancelada.");
             }
-
-        } catch (Exception e) {
-            System.out.println("Erro ao excluir episódio.");
-            e.printStackTrace();
+        } else {
+            System.out.println("Episódio não encontrado.");
         }
     }
 

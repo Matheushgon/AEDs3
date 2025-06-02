@@ -1,5 +1,6 @@
 package TP01v2.Controller;
 
+import TP01v2.Model.EpisodioCRUD;
 import TP01v2.Model.Serie;
 import TP01v2.Model.SerieCRUD;
 
@@ -7,7 +8,7 @@ import java.util.Scanner;
 
 public class SerieController {
     SerieCRUD arquivo;
-    EpisodioController episodioController = new EpisodioController();
+    EpisodioCRUD episodioCRUD = new EpisodioCRUD();
 
     private static Scanner console = new Scanner(System.in);
 
@@ -34,11 +35,29 @@ public class SerieController {
         }
     }
 
+    public Serie buscarSerie(String nome) {
+        try {
+            Serie serie = arquivo.read(nome);
+            if (serie != null) {
+                return serie;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public void incluirSerie() {
         System.out.println("\nInclusão de Série");
 
         System.out.print("Nome: ");
         String nome = console.nextLine();
+
+        if(buscarSerie(nome) != null) {
+            System.out.println("\nERRO: Série com esse nome já existe. Inclusão não permitida.");
+            return;
+        }
 
         System.out.print("Ano de Lançamento: ");
         int ano = Integer.parseInt(console.nextLine());
@@ -117,8 +136,8 @@ public class SerieController {
         try {
             Serie serie = arquivo.read(nome);
             if (serie != null) {
-                //Se serie tiver episódios, não permite exclusão
-                if(episodioController.existeEpisodio(serie.getId())) {
+                //Procurar na Árvore B+
+                if(episodioCRUD.existeEpisodio(serie.getId())) {
                     System.out.println("A série possui episódios associados. Exclusão não permitida.");
                     return;
                 } else {

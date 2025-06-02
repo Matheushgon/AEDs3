@@ -45,6 +45,14 @@ public class EpisodioCRUD extends TP01v2.Utils.Arquivo<Episodio>{
             return null;
         return read(pni.getId());
     }
+
+    public Episodio read(int idSerie, String nome) throws Exception {
+        ParNomeId pni = indiceIndiretoNome.read(ParNomeId.hash(nome));
+        //procurar o episódio pelo nome e id da série
+        if(pni == null)
+            return null;
+        return read(pni.getId());
+    }
     
     public boolean delete(String nome) throws Exception {
         ParNomeId pni = indiceIndiretoNome.read(ParNomeId.hash(nome));
@@ -59,7 +67,10 @@ public class EpisodioCRUD extends TP01v2.Utils.Arquivo<Episodio>{
         Episodio e = super.read(id);
         if(e != null) {
             if(super.delete(id))
-                return indiceIndiretoNome.delete(ParNomeId.hash(e.getNome()));
+            //Remover índice indireto pelo nome
+            return indiceIndiretoNome.delete(ParNomeId.hash(e.getNome()));
+            //Remover índice direto pela série
+            indiceSerieEpisodio.delete(new ParIntInt(e.getIdSerie(), id));
         }
         return false;
     }
@@ -67,10 +78,17 @@ public class EpisodioCRUD extends TP01v2.Utils.Arquivo<Episodio>{
     @Override
     public boolean update(Episodio novoEpisodio) throws Exception {
         Episodio episodioVelho = read(novoEpisodio.getNome());
+        if (episodioVelho == null) return false;
         if(super.update(novoEpisodio)) {
-            if(novoEpisodio.getNome().compareTo(episodioVelho.getNome())!=0) {
+            // Atualiza índice por nome, se o nome mudou
+            if (!novoEpisodio.getNome().equals(episodioVelho.getNome())) {
                 indiceIndiretoNome.delete(ParNomeId.hash(episodioVelho.getNome()));
                 indiceIndiretoNome.create(new ParNomeId(novoEpisodio.getNome(), novoEpisodio.getId()));
+            }
+            // Atualiza índice B+, se o idSerie mudou
+            if (episodioVelho.getIdSerie() != novoEpisodio.getIdSerie()) {
+                indiceSerieEpisodio.delete(new ParIntInt(episodioVelho.getIdSerie(), episodioVelho.getId()));
+                indiceSerieEpisodio.create(new ParIntInt(novoEpisodio.getIdSerie(), novoEpisodio.getId()));
             }
             return true;
         }

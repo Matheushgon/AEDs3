@@ -59,9 +59,6 @@ public class EpisodioView {
                         mostraEpisodio(ep);
                     }
                     episodioController.alterarEpisodio(ep.getNome());
-                    if (ep != null) {
-                        mostraEpisodio(ep);
-                    }
                     break;
                 case 4:
                     episodioController.excluirEpisodio();

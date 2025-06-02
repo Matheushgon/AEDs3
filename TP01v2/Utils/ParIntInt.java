@@ -50,13 +50,13 @@ public class ParIntInt implements TP01v2.Utils.RegistroArvoreBMais<ParIntInt> {
     return this.TAMANHO;
   }
 
-  public int compareTo(ParIntInt a) {
-    if (this.idSerie != a.idSerie)
-      return this.idSerie - a.idSerie;
+  public int compareTo(ParIntInt chave) {
+    if (this.idSerie != chave.idSerie)
+      return this.idSerie - chave.idSerie;
     else
       // Só compara os valores de Num2, se o Num2 da busca for diferente de -1
       // Isso é necessário para que seja possível a busca de lista
-      return this.idEpisodio == -1 ? 0 : this.idEpisodio - a.idEpisodio;
+      return this.idEpisodio == -1 ? 0 : this.idEpisodio - chave.idEpisodio;
   }
 
   public String toString() {
