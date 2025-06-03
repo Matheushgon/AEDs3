@@ -77,7 +77,7 @@ public class EpisodioCRUD extends TP01v2.Utils.Arquivo<Episodio>{
 
     @Override
     public boolean update(Episodio novoEpisodio) throws Exception {
-        Episodio episodioVelho = read(novoEpisodio.getNome());
+        Episodio episodioVelho = read(novoEpisodio.getId());
         if (episodioVelho == null) return false;
         if(super.update(novoEpisodio)) {
             // Atualiza índice por nome, se o nome mudou

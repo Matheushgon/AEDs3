@@ -41,27 +41,44 @@ public class SerieView {
                     s = serieController.buscarSerie();
                     if (s != null) {
                         mostraSerie(s);
+                        System.out.println("\nDeseja vizualizar os episódios desta série? (S/N)");
+                        char resp = console.nextLine().charAt(0);
+                        if (resp == 'S' || resp == 's') {
+                            serieController.mostraEpisodios(s);
+                        }
                     }
+                    System.out.println("\nPressione Enter para continuar...");
+                    console.nextLine();
                     break;
                 case 2:
                     serieController.incluirSerie();
+                    System.out.println("\nPressione Enter para continuar...");
+                    console.nextLine();
                     break;
                 case 3:
                     s = serieController.buscarSerie();
                     if (s != null) {
                         mostraSerie(s);
-                        s = serieController.buscarSerie(serieController.alterarSerie(s.getNome()));
+                        String nome = serieController.alterarSerie(s.getNome());
+                        s = serieController.buscarSerie(nome);
                         if (s != null) mostraSerie(s);
-                        break;
+                    } else {
+                        System.out.println("ERRO: Série não encontrada.");
                     }
+                    System.out.println("\nPressione Enter para continuar...");
+                    console.nextLine();
                     break;
                 case 4:
                     serieController.excluirSerie();
+                    System.out.println("\nPressione Enter para continuar...");
+                    console.nextLine();
                     break;
                 case 0:
                     break;
                 default:
                     System.out.println("Opção inválida!");
+                    System.out.println("\nPressione Enter para continuar...");
+                    console.nextLine();
                     break;
             }
 

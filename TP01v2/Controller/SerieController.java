@@ -1,10 +1,16 @@
 package TP01v2.Controller;
 
+import TP01v2.Model.Episodio;
 import TP01v2.Model.EpisodioCRUD;
 import TP01v2.Model.Serie;
 import TP01v2.Model.SerieCRUD;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class SerieController {
     SerieCRUD arquivo;
@@ -25,11 +31,11 @@ public class SerieController {
             if (serie != null) {
                 return serie;
             } else {
-                System.out.println("Série não encontrada.");
+                System.out.println("\nERRO: Série não encontrada.");
                 return null;
             }
         } catch (Exception e) {
-            System.out.println("Erro ao buscar série.");
+            System.out.println("\nERRO ao buscar série.");
             e.printStackTrace();
             return null;
         }
@@ -75,9 +81,9 @@ public class SerieController {
             try {
                 Serie serie = new Serie(-1, nome, ano, sinopse, streaming);
                 arquivo.create(serie);
-                System.out.println("Série incluída com sucesso.");
+                System.out.println("\nSérie incluída com sucesso.");
             } catch (Exception e) {
-                System.out.println("Erro ao incluir série.");
+                System.out.println("\nERRO ao incluir série.");
                 e.printStackTrace();
             }
         }
@@ -93,7 +99,7 @@ public class SerieController {
                 String novoNome = console.nextLine();
                 // Se o novo nome já existir, não permite a alteração
                 if (!novoNome.isEmpty() && buscarSerie(novoNome) != null) {
-                    System.out.println("ERRO: Já existe uma série com esse nome. Alteração não permitida.");
+                    System.out.println("\nERRO: Já existe uma série com esse nome. Alteração não permitida.");
                     return null;
                 }
                 // Se o novo nome for vazio, mantém o nome atual
@@ -115,21 +121,21 @@ public class SerieController {
                 char resp = console.nextLine().charAt(0);
                 if (resp == 'S' || resp == 's') {
                     if (arquivo.update(serie)) {
-                        System.out.println("Série alterada com sucesso.");
+                        System.out.println("\nSérie alterada com sucesso.");
                         return novoNome.isEmpty() ? nome : novoNome;
                     } else {
-                        System.out.println("Erro ao alterar série.");
+                        System.out.println("\nERRO ao alterar série.");
                     }
                 } else {
-                    System.out.println("Alterações canceladas.");
+                    System.out.println("\nAlterações canceladas.");
                 }
 
             } else {
-                System.out.println("Série não encontrada.");
+                System.out.println("\nERRO: Série não encontrada.");
             }
 
         } catch (Exception e) {
-            System.out.println("Erro ao alterar série.");
+            System.out.println("\nErro ao alterar série.");
             e.printStackTrace();
         }
         return null;
@@ -146,7 +152,7 @@ public class SerieController {
             if (serie != null) {
                 //Procurar na Árvore B+
                 if(episodioCRUD.existeEpisodio(serie.getId())) {
-                    System.out.println("A série possui episódios associados. Exclusão não permitida.");
+                    System.out.println("\nERRO: A série possui episódios associados. Exclusão não permitida.");
                     return;
                 } else {
                     System.out.print("Confirma exclusão? (S/N): ");
@@ -154,21 +160,66 @@ public class SerieController {
 
                     if (resp == 'S' || resp == 's') {
                         if (!arquivo.delete(nome)) {
-                            System.out.println("Série excluída com sucesso.");
+                            System.out.println("\nSérie excluída com sucesso.");
                         } else {
-                            System.out.println("Erro ao excluir série.");
+                            System.out.println("\nERRO ao excluir série.");
                         }
                     } else {
-                        System.out.println("Exclusão cancelada.");
+                        System.out.println("\nExclusão cancelada.");
                     }
                 }
             } else {
-                System.out.println("Série não encontrada.");
+                System.out.println("\nERRO: Série não encontrada.");
             }
 
         } catch (Exception e) {
-            System.out.println("Erro ao excluir série.");
+            System.out.println("\nERRO ao excluir série.");
             e.printStackTrace();
+        }
+    }
+
+    public void mostraEpisodios(Serie s) {
+        if (s == null) {
+            System.out.println("\nERRO: Série não encontrada.");
+            return;
+        }
+
+        System.out.println("\nEpisódios da Série: " + s.getNome());
+        System.out.println("----------------------");
+
+        try {
+            List<Episodio> episodios = episodioCRUD.buscarPorIdSerie(s.getId());
+
+            if (episodios.isEmpty()) {
+                System.out.println("\nNenhum episódio encontrado para esta série.");
+                return;
+            }
+
+            // Agrupar por temporada
+            Map<Integer, List<Episodio>> episodiosPorTemporada = new TreeMap<>();
+            for (Episodio ep : episodios) {
+                episodiosPorTemporada
+                    .computeIfAbsent(ep.getTemporada(), k -> new ArrayList<>())
+                    .add(ep);
+            }
+
+            // Mostrar episódios agrupados e ordenados
+            for (Map.Entry<Integer, List<Episodio>> entrada : episodiosPorTemporada.entrySet()) {
+                int temporada = entrada.getKey();
+                List<Episodio> listaEpisodios = entrada.getValue();
+
+                // Ordenar os episódios por número do episódio
+                listaEpisodios.sort(Comparator.comparingInt(Episodio::getNumeroEpisodio));
+
+                System.out.println("Temporada " + temporada + ":");
+                for (Episodio ep : listaEpisodios) {
+                    System.out.println("  Episódio " + ep.getNumeroEpisodio() + ": " + ep.getNome());
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("\nERRO ao buscar episódios.");
+            e.printStackTrace();    
         }
     }
 

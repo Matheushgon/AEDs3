@@ -46,27 +46,35 @@ public class EpisodioView {
                     if (ep != null) {
                         mostraEpisodio(ep);
                     }
+                    System.out.println("\nPressione Enter para continuar...");
+                    console.nextLine();
                     break;
                 case 2:
                     episodioController.incluirEpisodio();
+                    System.out.println("\nPressione Enter para continuar...");
+                    console.nextLine();
                     break;
                 case 3:
                     ep = episodioController.buscarEpisodio();
-                    if (ep == null) {
-                        System.out.println("Episódio não encontrado.");
-                        break;
-                    } else {
+                    if (ep != null) {
                         mostraEpisodio(ep);
+                        String nome = episodioController.alterarEpisodio(ep.getNome());
+                        if (nome != null) ep = episodioController.buscarEpisodio(ep.getIdSerie(), nome);
                     }
-                    episodioController.alterarEpisodio(ep.getNome());
+                    System.out.println("\nPressione Enter para continuar...");
+                    console.nextLine();
                     break;
                 case 4:
                     episodioController.excluirEpisodio();
+                    System.out.println("\nPressione Enter para continuar...");
+                    console.nextLine();
                     break;
                 case 0:
                     break;
                 default:
                     System.out.println("Opção inválida!");
+                    System.out.println("\nPressione Enter para continuar...");
+                    console.nextLine();
                     break;
             }
 
@@ -82,6 +90,7 @@ public class EpisodioView {
             System.out.println("Temporada....: " + ep.getTemporada());
             System.out.println("Número.......: " + ep.getNumeroEpisodio());
             System.out.println("Exibido em...: " + ep.getDataLancamento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            System.out.println("Duração......: " + ep.getDuracao() + " minutos");
             System.out.println("----------------------");
         }
     }

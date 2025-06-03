@@ -22,16 +22,16 @@ public class EpisodioController {
     public Episodio buscarEpisodio() {
         //Melhorar lógica com arvore B+2
         System.out.println("\nBusca de Episódio");
-        System.out.println("Nome da Série: ");
+        System.out.print("Nome da Série: ");
         String nomeSerie = console.nextLine();
         try {
             Serie s = serieController.buscarSerie(nomeSerie);
             if (s == null) {
-                System.out.println("Série não encontrada.");
+                System.out.println("\nERRO: Série não encontrada.");
                 return null;
             }
         } catch (Exception e) {
-            System.out.println("Erro ao buscar série.");
+            System.out.println("\nERRO ao buscar série.");
             e.printStackTrace();
             return null;
         }
@@ -42,21 +42,66 @@ public class EpisodioController {
             if (episodio != null) {
                 return episodio;
             } else {
-                System.out.println("Episódio não encontrado.");
+                System.out.println("\nERRO: Episódio não encontrado.");
                 return null;
             }
         } catch (Exception e) {
-            System.out.println("Erro ao buscar episódio.");
+            System.out.println("\nERRO ao buscar episódio.");
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Episodio buscarEpisodio(int idSerie, String nomeEpisodio) {
+        try {
+            Serie serie = arquivoSerie.read(idSerie);
+            if (serie != null) {
+                Episodio episodio = arquivo.read(serie.getId(), nomeEpisodio);
+                if (episodio != null) {
+                    return episodio;
+                } else {
+                    System.out.println("\nERRO: Episódio não encontrado.");
+                    return null;
+                }
+            } else {
+                System.out.println("\nERRO: Série não encontrada.");
+                return null;
+            }
+        } catch (Exception e) {
+            System.out.println("\nERRO ao buscar episódio.");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Episodio buscarEpisodio(String NomeSerie, String nomeEpisodio) {
+        try {
+            Serie serie = arquivoSerie.read(NomeSerie);
+            if (serie != null) {
+                Episodio episodio = arquivo.read(serie.getId(), nomeEpisodio);
+                if (episodio != null) {
+                    return episodio;
+                } else {
+                    System.out.println("\nERRO: Episódio não encontrado.");
+                    return null;
+                }
+            } else {
+                System.out.println("\nERRO: Série não encontrada.");
+                return null;
+            }
+        } catch (Exception e) {
+            System.out.println("\nERRO ao buscar episódio.");
+            e.printStackTrace();
+            return null;
+        }
+        
     }
 
     public boolean existeEpisodio(int idSerie) {
         try {
             return arquivo.existeEpisodio(idSerie);
         } catch (Exception e) {
-            System.out.println("Erro ao verificar existência do episódio.");
+            System.out.println("\nERRO ao verificar existência do episódio.");
             e.printStackTrace();
             return false;
         }
@@ -86,6 +131,10 @@ public class EpisodioController {
                 System.out.print("Data de Exibição (DD/MM/AAAA): ");
                 String dataStr = console.nextLine();
                 LocalDate dataExibicao = LocalDate.parse(dataStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                if(dataExibicao.getYear() < serie.getAnoLancamento()){
+                    System.out.println("\nERRO: Data de exibição não pode ser anterior ao ano de lançamento da série.");
+                    return;
+                }
 
                 System.out.print("Duração do Episódio em minutos: ");
                 int duracao = Integer.parseInt(console.nextLine());
@@ -99,7 +148,7 @@ public class EpisodioController {
                         arquivo.create(ep);
                         System.out.println("\nEpisódio incluído com sucesso.");
                     } catch (Exception e) {
-                        System.out.println("\nErro ao incluir episódio.\n");
+                        System.out.println("\nERRO ao incluir episódio.\n");
                         e.printStackTrace();
                     }
 
@@ -110,12 +159,12 @@ public class EpisodioController {
             }
                 
         } catch (Exception e) {
-            System.out.println("\nErro ao buscar série.\n");
+            System.out.println("\nERRO ao buscar série.\n");
             e.printStackTrace();
         }
     }
 
-    public Episodio alterarEpisodio(String nome) {
+    public String alterarEpisodio(String nome) {
         System.out.println("\nAlteração de Episódio");
 
         try {
@@ -138,6 +187,10 @@ public class EpisodioController {
                 String novaData = console.nextLine();
                 if (!novaData.isEmpty()) {
                     LocalDate novaDataExibicao = LocalDate.parse(novaData, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    if (novaDataExibicao.getYear() < arquivoSerie.read(episodio.getIdSerie()).getAnoLancamento()) {
+                        System.out.println("\nERRO: Data de exibição não pode ser anterior ao ano de lançamento da série.");
+                        return null;
+                    }
                     episodio.setDataLancamento(novaDataExibicao);
                 }
 
@@ -149,24 +202,24 @@ public class EpisodioController {
                 char resp = console.nextLine().charAt(0);
                 if (resp == 'S' || resp == 's') {
                     if (arquivo.update(episodio)) {
-                        System.out.println("Episódio alterado com sucesso.");
-                        return episodio;
+                        System.out.println("\nEpisódio alterado com sucesso.");
+                        return episodio.getNome();
                     } else {
-                        System.out.println("Erro ao alterar episódio.");
+                        System.out.println("\nERRO ao alterar episódio.");
                         return null;
                     }
                 } else {
-                    System.out.println("Alterações canceladas.");
+                    System.out.println("\nAlterações canceladas.");
                     return null;
                 }
 
             } else {
-                System.out.println("Episódio não encontrado.");
+                System.out.println("\nERRO: Episódio não encontrado.");
                 return null;
             }
 
         } catch (Exception e) {
-            System.out.println("Erro ao alterar episódio.");
+            System.out.println("\nERRO ao alterar episódio.");
             e.printStackTrace();
             return null;
         }
@@ -182,11 +235,11 @@ public class EpisodioController {
         try {
             serie = arquivoSerie.read(nomeSerie);
             if (serie == null) {
-                System.out.println("Série não encontrada.");
+                System.out.println("\nERRO: Série não encontrada.");
                 return;
             }
         } catch (Exception e) {
-            System.out.println("Erro ao buscar série.");
+            System.out.println("\nERRO ao buscar série.");
             e.printStackTrace();
             return;
         }
@@ -196,11 +249,11 @@ public class EpisodioController {
         try {
             episodio = arquivo.read(nome);
             if (episodio == null) {
-                System.out.println("Episódio não encontrado.");
+                System.out.println("\nERRO: Episódio não encontrado.");
                 return;
             }
         } catch (Exception e) {
-            System.out.println("Erro ao buscar episódio.");
+            System.out.println("\nERRO ao buscar episódio.");
             e.printStackTrace();
         }
 
@@ -210,17 +263,17 @@ public class EpisodioController {
             if (resp == 'S' || resp == 's') {
                 try {
                     arquivo.delete(episodio.getId());
-                    System.out.println("Episódio excluído com sucesso.");
+                    System.out.println("\nEpisódio excluído com sucesso.");
                 } catch (Exception e) {
-                    System.out.println("Erro ao excluir episódio.");
+                    System.out.println("\nERRO ao excluir episódio.");
                     e.printStackTrace();
                     return;
                 }
             } else {
-                System.out.println("Exclusão cancelada.");
+                System.out.println("\nExclusão cancelada.");
             }
         } else {
-            System.out.println("Episódio não encontrado.");
+            System.out.println("\nERRO: Episódio não encontrado.");
         }
     }
 
@@ -230,10 +283,10 @@ public class EpisodioController {
             if (serie != null) {
                 return serie.getNome();
             } else {
-                return "Série não encontrada.";
+                return "\nSérie não encontrada.";
             }
         } catch (Exception e) {
-            return "Erro ao buscar série.";
+            return "\nERRO ao buscar série.";
         }
     }
 
