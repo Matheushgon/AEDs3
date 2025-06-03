@@ -83,7 +83,7 @@ public class SerieController {
         }
     }
 
-    public void alterarSerie(String nome) {
+    public String alterarSerie(String nome) {
         System.out.println("\nAlteração de Série");
 
         try {
@@ -91,6 +91,12 @@ public class SerieController {
             if (serie != null) {
                 System.out.print("Novo nome (deixe em branco para manter): ");
                 String novoNome = console.nextLine();
+                // Se o novo nome já existir, não permite a alteração
+                if (!novoNome.isEmpty() && buscarSerie(novoNome) != null) {
+                    System.out.println("ERRO: Já existe uma série com esse nome. Alteração não permitida.");
+                    return null;
+                }
+                // Se o novo nome for vazio, mantém o nome atual
                 if (!novoNome.isEmpty()) serie.setNome(novoNome);
 
                 System.out.print("Novo ano de lançamento (deixe em branco): ");
@@ -110,6 +116,7 @@ public class SerieController {
                 if (resp == 'S' || resp == 's') {
                     if (arquivo.update(serie)) {
                         System.out.println("Série alterada com sucesso.");
+                        return novoNome.isEmpty() ? nome : novoNome;
                     } else {
                         System.out.println("Erro ao alterar série.");
                     }
@@ -125,6 +132,7 @@ public class SerieController {
             System.out.println("Erro ao alterar série.");
             e.printStackTrace();
         }
+        return null;
     }
 
     public void excluirSerie() {
@@ -145,7 +153,7 @@ public class SerieController {
                     char resp = console.nextLine().charAt(0);
 
                     if (resp == 'S' || resp == 's') {
-                        if (arquivo.delete(nome)) {
+                        if (!arquivo.delete(nome)) {
                             System.out.println("Série excluída com sucesso.");
                         } else {
                             System.out.println("Erro ao excluir série.");

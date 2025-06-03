@@ -50,8 +50,8 @@ public class SerieView {
                     s = serieController.buscarSerie();
                     if (s != null) {
                         mostraSerie(s);
-                        serieController.alterarSerie(s.getNome());
-                        mostraSerie(s);
+                        s = serieController.buscarSerie(serieController.alterarSerie(s.getNome()));
+                        if (s != null) mostraSerie(s);
                         break;
                     }
                     break;
