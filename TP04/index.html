@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Hash Extensível Interativa</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js"></script>
+</head>
+<body>
+
+    <h2>Visualizador de Hash Extensível</h2>
+
+    <div id="controls">
+        <input type="text" id="keyInput" placeholder="Digite a chave (ex: 12)" />
+        <button onclick="insertKey()">Inserir</button>
+        <button onclick="removeKey()">Remover</button>
+        <button onclick="searchKey()">Buscar</button>
+    </div>
+
+
+    <div class="info"><strong>Profundidade Global:</strong> <span id="depth">1</span></div>
+    <div id="directory" class="directory"></div>
+
+</body>
+</html>
