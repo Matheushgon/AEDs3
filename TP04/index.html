@@ -2,24 +2,64 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Hash Extensível Interativa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador de Tabela Hash Extensível</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js"></script>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <h1>🔗 Tabela Hash Extensível</h1>
+        </div>
 
-    <h2>Visualizador de Hash Extensível</h2>
+        <div class="controls">
+            <div class="input-group">
+                <label for="elementInput">Valor:</label>
+                <input type="number" id="elementInput" placeholder="Digite um número" min="0">
+                <button class="btn btn-primary" onclick="insertElement()">Inserir</button>
+                <button class="btn btn-danger" onclick="deleteElement()">Remover</button>
+                <button class="btn btn-success" onclick="searchElement()">Buscar</button>
+            </div>
+            <div class="input-group">
+                <label for="bucketSize">Tamanho do Cesto:</label>
+                <input type="number" id="bucketSize" value="3" min="1" max="10">
+                <button class="btn btn-primary" onclick="resetTable()">Reiniciar</button>
+            </div>
+        </div>
 
-    <div id="controls">
-        <input type="text" id="keyInput" placeholder="Digite a chave (ex: 12)" />
-        <button onclick="insertKey()">Inserir</button>
-        <button onclick="removeKey()">Remover</button>
-        <button onclick="searchKey()">Buscar</button>
+        <div class="visualization">
+            <div class="directory-section">
+                <div class="section-title">Diretório</div>
+                <div class="directory">
+                    <div class="global-depth">Profundidade Global: <span id="globalDepth">0</span></div>
+                    <div id="directoryEntries"></div>
+                </div>
+            </div>
+
+            <div class="buckets-section">
+                <div class="section-title">Cestos</div>
+                <div class="buckets-container" id="bucketsContainer"></div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="totalElements">0</div>
+                <div class="stat-label">Elementos</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="totalBuckets">1</div>
+                <div class="stat-label">Cestos</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="loadFactor">0%</div>
+                <div class="stat-label">Fator de Carga</div>
+            </div>
+        </div>
+
+        <div id="message"></div>
     </div>
 
-
-    <div class="info"><strong>Profundidade Global:</strong> <span id="depth">1</span></div>
-    <div id="directory" class="directory"></div>
-
+    <script src="script.js"></script>
 </body>
 </html>
